@@ -12,4 +12,4 @@ The repo is structured as:
 -   `scripts` contains the R scripts used to simulate, download and clean data.
 
 # Note
-LLM Usage:
+**Statement on LLM usage: **
