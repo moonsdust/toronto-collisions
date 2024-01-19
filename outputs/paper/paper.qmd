@@ -1,5 +1,5 @@
 ---
-title: "(Working Title) Motor Vehicle Collision and Income of Wards"
+title: "(Working Title) Motor Vehicle Collision Across Toronto"
 subtitle: "My subtitle if needed"
 author: "Emily Su"
 thanks: "Data and code are available at: https://github.com/moonsdust/toronto-collisions"
