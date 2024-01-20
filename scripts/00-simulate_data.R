@@ -22,7 +22,7 @@ toronto_pop <- 2930000 # Population of Toronto
 
 
 ## Dataset 1: Simulate dataset regarding the number of collisions, 
-# collision types, and what year the collision occured ##
+# collision types, and what year the collision occurred ##
 # Expected Columns: year | collision_type | num_of_collisions 
 simulated_data_one <-
   tibble(
