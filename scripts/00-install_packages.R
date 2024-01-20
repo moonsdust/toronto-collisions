@@ -2,7 +2,7 @@
 # Purpose: Installs packages needed to run scripts and Quarto document
 # Author: Emily Su
 # Date: 25 January 2024
-# Contact: em.su@utoronto.ca
+# Contact: em.su@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: -
 
