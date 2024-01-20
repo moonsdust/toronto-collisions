@@ -5,7 +5,8 @@
 # Date: 25 January 2024
 # Contact: em.su@utoronto.ca
 # License: MIT
-# Pre-requisites: -
+# Pre-requisites: tidyverse and knitr have been installed, else 
+# uncomment the code to install the two packages.
 
 #### Workspace setup #### 
 
