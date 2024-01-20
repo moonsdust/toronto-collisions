@@ -2,10 +2,11 @@
 
 ## Overview
 
-# Important Notes
-**About unedited_collisions_data.csv*: This CSV file is currently not in `inputs/data`
+## Important Notes
+**About unedited_collisions_data.csv**: This CSV file is currently not in `inputs/data`
 due to its file size exceeding 100MB. To download unedited_collisions_data.csv, 
 run the script `01-download_data.R` located in the following path: `scripts/01-download_data.R`. 
+
 **Statement on LLM usage: No LLMs were used for any aspect of this work.**
 
 ## File Structure
