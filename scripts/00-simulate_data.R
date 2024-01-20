@@ -5,17 +5,11 @@
 # Date: 25 January 2024
 # Contact: em.su@utoronto.ca
 # License: MIT
-# Pre-requisites: tidyverse and knitr have been installed, else 
-# uncomment the code to install the two packages.
+# Pre-requisites: tidyverse has been installed by running 00-install_packages.R
 
 #### Workspace setup #### 
-
-## Installing packages (only needs to be done once per computer)
-# Uncomment the below if this is the first time running the script 
-# install.packages("tidyverse")
-# install.packages("knitr")
+# Loading packages 
 library(tidyverse) # Contains data-related packages
-library(knitr) # To make tables
 
 #### Simulate data ####
 set.seed(646)
@@ -24,6 +18,8 @@ set.seed(646)
 number_of_years <- 7 
 num_of_wards <- 25 # Number of wards in Toronto
 toronto_pop <- 2930000 # Population of Toronto
+
+
 
 ## Dataset 1: Simulate dataset regarding the number of collisions, 
 # collision types, and what year the collision occured ##
