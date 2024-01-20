@@ -1,16 +1,19 @@
 #### Preamble ####
-# Purpose: Cleans the raw plane data recorded by two observers..... [...UPDATE THIS...]
+# Purpose: Cleans unedited collisions data and unedited ward profiles data
+# to create clean, usable CSV files with relevant columns.
 # Author: Emily Su
 # Date: 25 January 2024
-# Contact: em.su@utoronto.ca
+# Contact: em.su@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
+# Pre-requisites: tidyverse has been installed by running 00-install_packages.R
+# and datasets have been downloaded by running 01-download_data.R. 
 
 #### Workspace setup ####
 library(tidyverse)
 
 #### Clean data ####
+
+# Dataset 1 (Expected Columns)
 raw_data <- read_csv("inputs/data/plane_data.csv")
 
 cleaned_data <-
