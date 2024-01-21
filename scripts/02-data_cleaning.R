@@ -35,7 +35,8 @@ cleaned_collisions_data <-
     pd_collisions,
     ftr_collisions, 
     long_wgs84,
-    lat_wgs84
+    lat_wgs84, 
+    neighbourhood_158
   )
 
 # Renaming occ_year column to year
@@ -75,7 +76,7 @@ cleaned_collisions_data$ftr_collisions <- as.numeric(cleaned_collisions_data$ftr
 # Create a new dataset
 dataset_1 <-
   cleaned_collisions_data |>
-  select(-c(long_wgs84,lat_wgs84)) |>
+  select(-c(long_wgs84,lat_wgs84, neighbourhood_158)) |>
   group_by(year, fatalities, injury_collisions, pd_collisions, ftr_collisions) |>
   mutate(num = n()) |> # count number of rows based on premise and year
   rename(num_of_collisions = num) |>
@@ -162,7 +163,7 @@ cleaned_ward_data <-
 
 
 # Dataset 3 (Contains data of collision type and their longitude and latitude)
-# Expected: collision_type | long | lat
+# Expected: collision_type | long | lat | neighbourhood
 dataset_3 <- 
   cleaned_collisions_data |>
   unique() |> # This will filter out repeated rows  
@@ -185,10 +186,11 @@ dataset_3 <-
       )
   ) |>
   select(-c(year, fatalities, injury_collisions, pd_collisions, ftr_collisions)) |> # Remove columns
-  select(collision_type, long_wgs84, lat_wgs84) |> # Rearrange columns in desired order  
+  select(collision_type, long_wgs84, lat_wgs84, neighbourhood_158) |> # Rearrange columns in desired order  
   rename ( # Left side is the new name and the right side is the old name
     long = long_wgs84,
-    lat = lat_wgs84
+    lat = lat_wgs84,
+    neighbourhood = neighbourhood_158
   ) |>
   filter(
     (round(long) != 0 & round(lat) != 0) # Filter out long and lat that are at 0 
