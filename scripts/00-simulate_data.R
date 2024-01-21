@@ -2,7 +2,7 @@
 # Purpose: To simulate datasets regarding motor vehicle collisions 
 # across Toronto 
 # Author: Emily Su
-# Date: 25 January 2024
+# Date: 23 January 2024
 # Contact: em.su@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: tidyverse has been installed by running 00-install_packages.R

@@ -2,7 +2,7 @@
 # Purpose: Downloads and saves the data from Open Data Toronto 
 # on traffic collisions and information about the Toronto wards.  
 # Author: Emily Su
-# Date: 25 January 2024
+# Date: 23 January 2024
 # Contact: em.su@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: opendatatoronto and tidyverse has been installed 
