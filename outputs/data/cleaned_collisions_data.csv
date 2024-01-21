@@ -1,0 +1,29 @@
+year,collision_type,num_of_collisions
+2017,Fail to Remain,11411
+2017,Property Damage,50157
+2017,Personal Injury,10868
+2017,Fatal,60
+2018,Personal Injury,9832
+2018,Property Damage,55762
+2018,Fail to Remain,11851
+2018,Fatal,66
+2019,Personal Injury,8774
+2019,Property Damage,60865
+2019,Fail to Remain,9504
+2019,Fatal,62
+2020,Property Damage,34056
+2020,Fail to Remain,4251
+2020,Personal Injury,4950
+2020,Fatal,40
+2021,Personal Injury,5211
+2021,Fail to Remain,4430
+2021,Property Damage,32053
+2021,Fatal,55
+2022,Personal Injury,5930
+2022,Property Damage,47917
+2022,Fail to Remain,3600
+2022,Fatal,45
+2023,Property Damage,34262
+2023,Personal Injury,5831
+2023,Fail to Remain,8408
+2023,Fatal,28
