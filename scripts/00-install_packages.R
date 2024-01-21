@@ -14,4 +14,3 @@ install.packages("opendatatoronto")
 install.packages("janitor") # To clean datasets
 install.packages("dplyr")
 install.packages("ggplot2") # To make graphs
-install.packages("rgdal") 
