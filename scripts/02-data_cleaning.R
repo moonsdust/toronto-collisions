@@ -157,7 +157,8 @@ ward_pop_size$pop_num <- as.numeric(ward_pop_size$pop_num)
 # Join ward_pop_size, and ward_avg_income_row into a single tibble 
 cleaned_ward_data <- 
   ward_pop_size |>
-  right_join(ward_avg_income, by = "ward_num")
+  right_join(ward_avg_income, by = "ward_num") |>
+  select(ward_num, pop_num, avg_income) # Rearrange order
 
 
 # Dataset 3 (Contains data of collision type and their longitude and latitude)
