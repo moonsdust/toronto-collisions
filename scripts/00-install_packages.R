@@ -11,5 +11,6 @@
 install.packages("tidyverse") # Contains data-related packages
 install.packages("knitr") # To make tables
 install.packages("opendatatoronto")
-install.packages("janitor")
+install.packages("janitor") # To clean datasets
 install.packages("dplyr")
+install.packages(ggplot2) # To make graphs
