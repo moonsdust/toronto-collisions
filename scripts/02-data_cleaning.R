@@ -189,6 +189,9 @@ dataset_3 <-
   rename ( # Left side is the new name and the right side is the old name
     long = long_wgs84,
     lat = lat_wgs84
+  ) |>
+  filter(
+    (round(long) != 0 & round(lat) != 0) # Filter out long and lat that are at 0 
   )
 
 #### Save data ####
