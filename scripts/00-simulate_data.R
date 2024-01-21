@@ -28,18 +28,17 @@ simulated_data_one <-
   tibble(
     # We will repeat the type of collision name for <number_of_years> times 
     collision_type =
-      c(rep("Personal Injury", number_of_years), 
-        rep("Fail to Remain", number_of_years), 
+      c(rep("Personal Injury", number_of_years),
         rep("Property Damage", number_of_years), 
         rep("Fatal", number_of_years)),
     # We will create a vector for the years 2017 to 2023
-    # and repeat this 4 times for each type of collision 
-    year = rep(c(1:number_of_years + 2016), 4),
-    # We will create <number_of_years> * 4 random values 
+    # and repeat this 3 times for each type of collision 
+    year = rep(c(1:number_of_years + 2016), 3),
+    # We will create <number_of_years> * 3 random values 
     # from a uniform distribution to get the number of collisions 
     # each year for each collision type 
     num_of_collisions =
-      round(runif(n = number_of_years * 4, min = 0, max = 1000))
+      round(runif(n = number_of_years * 3, min = 0, max = 1000))
   )
 # Creates table for the simulated data
 simulated_data_one
@@ -49,14 +48,14 @@ simulated_data_one
 simulated_data_one$year |> min() == 2017
 simulated_data_one$year |> max() == 2023
 
-# 2. We have 4 types of collisions: "Personal Injury", "Fail to Remain", 
+# 2. We have 3 types of collisions: "Personal Injury",
 # "Property Damage", "Fatal"
 simulated_data_one$collision_type |>
   unique() |>
-  length() == 4
+  length() == 3
 
 simulated_data_one$collision_type |>
-  unique() == c("Personal Injury", "Fail to Remain", "Property Damage", "Fatal")
+  unique() == c("Personal Injury", "Property Damage", "Fatal")
 
 # 3. num_of_collisions is greater than or equal to 0.
 simulated_data_one$num_of_collisions |> min() >= 0
