@@ -15,4 +15,3 @@ install.packages("janitor") # To clean datasets
 install.packages("dplyr")
 install.packages("ggplot2") # To make graphs
 install.packages("sf") # For making maps
-
