@@ -67,16 +67,17 @@ cleaned_collisions_data$ftr_collisions <- str_replace(
 cleaned_collisions_data$ftr_collisions <- str_replace(
   cleaned_collisions_data$ftr_collisions, "NO", "0")
 
-# Replace NO and N\A with a 0 and YES with a 1 
-cleaned_collisions_data$pedestrian_involved[cleaned_collisions_data$pedestrian_involved != "YES"] <- 0
-cleaned_collisions_data$pedestrian_involved[cleaned_collisions_data$pedestrian_involved == "YES"] <- 1
+# Replace N\A and "NO' with a "No" and "YES" with a "Yes"
+cleaned_collisions_data$pedestrian_involved[cleaned_collisions_data$pedestrian_involved != "YES"] <- "No"
+cleaned_collisions_data$pedestrian_involved[cleaned_collisions_data$pedestrian_involved != "YES"] <- "Yes"
 
 # Convert columns from character to numeric
 cleaned_collisions_data$injury_collisions <- as.numeric(cleaned_collisions_data$injury_collisions)
 cleaned_collisions_data$pd_collisions <- as.numeric(cleaned_collisions_data$pd_collisions)
 cleaned_collisions_data$ftr_collisions <- as.numeric(cleaned_collisions_data$ftr_collisions)
-cleaned_collisions_data$pedestrian_involved <- as.numeric(cleaned_collisions_data$pedestrian_involved)
 
+# Convert column pedestrian_involved from character to numeric
+cleaned_collisions_data$pedestrian_involved <- as.character(cleaned_collisions_data$pedestrian_involved)
 
 # Dataset 1 (number of collisions, collision types, and what year the collision occurred)
 # Expected Columns: year | collision_type | num_of_collisions
