@@ -135,7 +135,7 @@ ward_pop_size <-
 # Get row that contains the average household income
 ward_avg_income_row <- 
   cleaned_ward_data |> 
-  filter(x2021_one_variable_city_of_toronto_profiles == "Average total income of households in 2020 ($)")
+  filter(x2021_one_variable_city_of_toronto_profiles == "Total - Household total income groups in 2020 for private households - 25% sample data")
 # Convert row to a column 
 ward_avg_income <- 
   ward_avg_income_row |>
