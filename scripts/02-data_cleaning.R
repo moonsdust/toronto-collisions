@@ -197,7 +197,7 @@ dataset_3 <-
   filter(
     (round(long) != 0 & round(lat) != 0) # Filter out long and lat that are at 0 
   ) |>
-  group_by(neighbourhood) |>
+  group_by(neighbourhood, collision_type) |>
   mutate(num = n()) |> # count number of rows based on premise and year
   rename(num_of_collisions = num) |>
   unique() # This will filter out repeated rows
