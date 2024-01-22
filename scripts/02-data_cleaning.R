@@ -69,7 +69,7 @@ cleaned_collisions_data$ftr_collisions <- str_replace(
 
 # Replace N\A and "NO' with a "No" and "YES" with a "Yes"
 cleaned_collisions_data$pedestrian_involved[cleaned_collisions_data$pedestrian_involved != "YES"] <- "No"
-cleaned_collisions_data$pedestrian_involved[cleaned_collisions_data$pedestrian_involved != "YES"] <- "Yes"
+cleaned_collisions_data$pedestrian_involved[cleaned_collisions_data$pedestrian_involved == "YES"] <- "Yes"
 
 # Convert columns from character to numeric
 cleaned_collisions_data$injury_collisions <- as.numeric(cleaned_collisions_data$injury_collisions)
