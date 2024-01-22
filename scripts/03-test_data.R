@@ -97,12 +97,21 @@ dataset_3$yearly_collision_num |> min() >= 0
 # 5. total_collisions_2017_2023 is greater than or equal to 0.
 dataset_3$total_collisions_2017_2023 |> min() >= 0
 
+# 6. pedestrian_involved only contains 0 and 1 
+dataset_3$pedestrian_involved |>
+  unique() %in% c(0, 1)
+
+dataset_3$pedestrian_involved |>
+  unique() |>
+  length() == 2
+
 # 6. Check classes 
 class(dataset_3$year) == "numeric"
 class(dataset_3$collision_type) == "character"
 class(dataset_3$long) == "numeric"
 class(dataset_3$lat) == "numeric"
 class(dataset_3$neighbourhood) == "character"
+class(dataset_3$pedestrian_involved) == "numeric"
 class(dataset_3$num_of_collisions) == "numeric"
 class(dataset_3$yearly_collision_num) == "numeric"
 class(dataset_3$total_collisions_2017_2023) == "numeric"

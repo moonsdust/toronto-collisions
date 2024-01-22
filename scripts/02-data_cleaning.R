@@ -36,14 +36,16 @@ cleaned_collisions_data <-
     ftr_collisions, 
     long_wgs84,
     lat_wgs84, 
-    neighbourhood_158
+    neighbourhood_158,
+    pedestrian
   )
 
 # Renaming occ_year column to year
 cleaned_collisions_data <-
   cleaned_collisions_data |>
   rename( # Left side is the new name and the right side is the old name
-    year = occ_year
+    year = occ_year,
+    pedestrian_involved = pedestrian
   )
 
 # Get rid of all rows with NA 
@@ -65,18 +67,23 @@ cleaned_collisions_data$ftr_collisions <- str_replace(
 cleaned_collisions_data$ftr_collisions <- str_replace(
   cleaned_collisions_data$ftr_collisions, "NO", "0")
 
+# Replace NO and N\A with a 0 and YES with a 1 
+cleaned_collisions_data$pedestrian_involved[cleaned_collisions_data$pedestrian_involved != "YES"] <- 0
+cleaned_collisions_data$pedestrian_involved[cleaned_collisions_data$pedestrian_involved == "YES"] <- 1
+
 # Convert columns from character to numeric
 cleaned_collisions_data$injury_collisions <- as.numeric(cleaned_collisions_data$injury_collisions)
 cleaned_collisions_data$pd_collisions <- as.numeric(cleaned_collisions_data$pd_collisions)
 cleaned_collisions_data$ftr_collisions <- as.numeric(cleaned_collisions_data$ftr_collisions)
+cleaned_collisions_data$pedestrian_involved <- as.numeric(cleaned_collisions_data$pedestrian_involved)
 
 
 # Dataset 1 (number of collisions, collision types, and what year the collision occurred)
-# Expected Columns: year | collision_type | num_of_collisions 
+# Expected Columns: year | collision_type | num_of_collisions
 # Create a new dataset
 dataset_1 <-
   cleaned_collisions_data |>
-  select(-c(long_wgs84,lat_wgs84, neighbourhood_158)) |>
+  select(-c(long_wgs84,lat_wgs84, neighbourhood_158, pedestrian_involved)) |>
   group_by(year, fatalities, injury_collisions, pd_collisions, ftr_collisions) |>
   mutate(num = n()) |> # count number of rows based on premise and year
   rename(num_of_collisions = num) |>
@@ -215,7 +222,7 @@ cleaned_ward_data <-
 # Dataset 3 (Contains data of collision type, their longitude and latitude, 
 # neighbourhood of collision, and number of collisions of each neighbourhood
 # from 2017 to 2023)
-# Expected: year | collision_type | long | lat | neighbourhood | 
+# Expected: year | collision_type | long | lat | neighbourhood | pedestrian_involved
 # num_of_collisions | yearly_collision_num | total_collisions_2017_2023
 dataset_3 <- 
   cleaned_collisions_data |>
@@ -239,7 +246,7 @@ dataset_3 <-
       )
   ) |>
   select(-c(fatalities, injury_collisions, pd_collisions, ftr_collisions)) |> # Remove columns
-  select(year, collision_type, long_wgs84, lat_wgs84, neighbourhood_158) |> # Rearrange columns in desired order  
+  select(year, collision_type, long_wgs84, lat_wgs84, neighbourhood_158, pedestrian_involved) |> # Rearrange columns in desired order  
   rename ( # Left side is the new name and the right side is the old name
     long = long_wgs84,
     lat = lat_wgs84,
