@@ -165,7 +165,7 @@ cleaned_ward_data <-
 # Dataset 3 (Contains data of collision type, their longitude and latitude, 
 # neighbourhood of collision, and number of collisions of each neighbourhood
 # from 2017 to 2023)
-# Expected: collision_type | long | lat | neighbourhood | num_of)
+# Expected: year | collision_type | long | lat | neighbourhood | num_of_collision | yearly_collision_num)
 dataset_3 <- 
   cleaned_collisions_data |>
   unique() |> # This will filter out repeated rows  
@@ -187,8 +187,8 @@ dataset_3 <-
         TRUE ~ "None"
       )
   ) |>
-  select(-c(year, fatalities, injury_collisions, pd_collisions, ftr_collisions)) |> # Remove columns
-  select(collision_type, long_wgs84, lat_wgs84, neighbourhood_158) |> # Rearrange columns in desired order  
+  select(-c(fatalities, injury_collisions, pd_collisions, ftr_collisions)) |> # Remove columns
+  select(year, collision_type, long_wgs84, lat_wgs84, neighbourhood_158) |> # Rearrange columns in desired order  
   rename ( # Left side is the new name and the right side is the old name
     long = long_wgs84,
     lat = lat_wgs84,
@@ -197,10 +197,18 @@ dataset_3 <-
   filter(
     (round(long) != 0 & round(lat) != 0) # Filter out long and lat that are at 0 
   ) |>
-  group_by(neighbourhood) |>
-  mutate(num = n()) |> # count number of rows based on neighbourhood
+  group_by(neighbourhood, collision_type) |>
+  mutate(num = n()) |> # count number of rows based on neighbourhood and collision type
   rename(num_of_collisions = num) |>
-  unique() # This will filter out repeated rows
+  unique() |> # This will filter out repeated rows
+  group_by(neighbourhood, year) |>
+  mutate(num = n()) |> # count number of rows based on neighbourhood and year
+  rename(yearly_collision_num = num) |>
+  unique() |>
+  group_by(neighbourhood) |>
+  mutate(num = n()) |>
+  rename(total_collisions_2017_2023 = num) |>
+  unique()
 
 #### Save data ####
 # Save dataset 1
