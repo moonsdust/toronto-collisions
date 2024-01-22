@@ -162,8 +162,10 @@ cleaned_ward_data <-
   select(ward_num, pop_num, avg_income) # Rearrange order
 
 
-# Dataset 3 (Contains data of collision type and their longitude and latitude)
-# Expected: collision_type | long | lat | neighbourhood
+# Dataset 3 (Contains data of collision type, their longitude and latitude, 
+# neighbourhood of collision, and number of collisions of each neighbourhood
+# from 2017 to 2023)
+# Expected: collision_type | long | lat | neighbourhood | num_of)
 dataset_3 <- 
   cleaned_collisions_data |>
   unique() |> # This will filter out repeated rows  
@@ -194,7 +196,11 @@ dataset_3 <-
   ) |>
   filter(
     (round(long) != 0 & round(lat) != 0) # Filter out long and lat that are at 0 
-  )
+  ) |>
+  group_by(neighbourhood) |>
+  mutate(num = n()) |> # count number of rows based on premise and year
+  rename(num_of_collisions = num) |>
+  unique() # This will filter out repeated rows
 
 #### Save data ####
 # Save dataset 1
