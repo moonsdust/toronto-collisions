@@ -261,12 +261,10 @@ dataset_3 <-
   # Create a new column for the number of collisions for the neighbourhood for each 
   # type of collision (2017 to 2023)
   rename(num_of_collisions = num) |>
-  unique() |> # This will filter out repeated rows
   group_by(neighbourhood, year) |>
   mutate(num = n()) |> # count number of rows based on neighbourhood and year
   # Create a new column for the yearly collisions number for the neighbourhood (2017 to 2023)
   rename(yearly_collision_num = num) |>
-  unique() |>
   group_by(neighbourhood) |> # count number of rows based on neighbourhood
   mutate(num = n()) |> 
   # Create a new column for the total of collisions for the neighbourhood (2017 to 2023)
