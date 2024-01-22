@@ -129,7 +129,32 @@ ward_pop_size <-
     pop_num = "c(t(ward_pop_size_row))"
   ) |>
   mutate(
-    ward_num = c(1:25)
+    ward_num = c(1:25), 
+    ward_name = c("Etobicoke North", 
+                   "Etobicoke Centre", 
+                   "Etobicoke-Lakeshore", 
+                   "Parkdale-High Park", 
+                   "York South-Weston", 
+                   "York Centre", 
+                   "Humber River-Black Creek",
+                   "Eglinton-Lawrence", 
+                   "Davenport", 
+                   "Spadina-Fort York", 
+                   "University-Rosedale", 
+                   "Toronto-St. Paul’s", 
+                   "Toronto Centre", 
+                   "Toronto-Danforth", 
+                   "Don Valley West", 
+                   "Don Valley East",
+                   "Don Valley North", 
+                   "Willowdale", 
+                   "Beaches-East York", 
+                   "Scarborough Southwest", 
+                   "Scarborough Centre",
+                   "Scarborough-Agincourt",
+                   "Scarborough North", 
+                   "Scarborough-Guildwood",
+                   "Scarborough-Rouge Park")
   )
 
 # Get row that contains the average household income
@@ -148,7 +173,32 @@ ward_avg_income <-
     avg_income = "c(t(ward_avg_income_row))"
   ) |> 
   mutate(
-    ward_num = c(1:25)
+    ward_num = c(1:25), 
+    ward_name_avg = c("Etobicoke North", 
+                   "Etobicoke Centre", 
+                   "Etobicoke-Lakeshore", 
+                   "Parkdale-High Park", 
+                   "York South-Weston", 
+                   "York Centre", 
+                   "Humber River-Black Creek",
+                   "Eglinton-Lawrence", 
+                   "Davenport", 
+                   "Spadina-Fort York", 
+                   "University-Rosedale", 
+                   "Toronto-St. Paul’s", 
+                   "Toronto Centre", 
+                   "Toronto-Danforth", 
+                   "Don Valley West", 
+                   "Don Valley East",
+                   "Don Valley North", 
+                   "Willowdale", 
+                   "Beaches-East York", 
+                   "Scarborough Southwest", 
+                   "Scarborough Centre",
+                   "Scarborough-Agincourt",
+                   "Scarborough North", 
+                   "Scarborough-Guildwood",
+                   "Scarborough-Rouge Park")
   )
 
 # Convert columns from character to numeric
@@ -159,7 +209,7 @@ ward_pop_size$pop_num <- as.numeric(ward_pop_size$pop_num)
 cleaned_ward_data <- 
   ward_pop_size |>
   right_join(ward_avg_income, by = "ward_num") |>
-  select(ward_num, pop_num, avg_income) # Rearrange order
+  select(ward_num, ward_name, pop_num, avg_income) # Rearrange order
 
 
 # Dataset 3 (Contains data of collision type, their longitude and latitude, 
