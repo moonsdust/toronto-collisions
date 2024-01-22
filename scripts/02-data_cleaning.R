@@ -109,7 +109,7 @@ dataset_1 <-
 
 
 # Dataset 2 (cleaned_ward_data)
-# Expected columns: ward_num | pop_num | avg_income
+# Expected columns: ward_num | ward_name | pop_num | avg_income
 # Clean current column names
 cleaned_ward_data <- clean_names(raw_ward_profiles_data)
 
@@ -215,7 +215,8 @@ cleaned_ward_data <-
 # Dataset 3 (Contains data of collision type, their longitude and latitude, 
 # neighbourhood of collision, and number of collisions of each neighbourhood
 # from 2017 to 2023)
-# Expected: year | collision_type | long | lat | neighbourhood | num_of_collision | yearly_collision_num)
+# Expected: year | collision_type | long | lat | neighbourhood | 
+# num_of_collisions | yearly_collision_num | total_collisions_2017_2023
 dataset_3 <- 
   cleaned_collisions_data |>
   unique() |> # This will filter out repeated rows  
@@ -249,15 +250,19 @@ dataset_3 <-
   ) |>
   group_by(neighbourhood, collision_type) |>
   mutate(num = n()) |> # count number of rows based on neighbourhood and collision type
+  # Create a new column for the number of collisions for the neighbourhood for each 
+  # type of collision (2017 to 2023)
   rename(num_of_collisions = num) |>
   unique() |> # This will filter out repeated rows
   group_by(neighbourhood, year) |>
   mutate(num = n()) |> # count number of rows based on neighbourhood and year
+  # Create a new column for the yearly collisions number for the neighbourhood (2017 to 2023)
   rename(yearly_collision_num = num) |>
   unique() |>
-  group_by(neighbourhood) |>
-  mutate(num = n()) |>
-  rename(total_collisions_2017_2023 = num) |>
+  group_by(neighbourhood) |> # count number of rows based on neighbourhood
+  mutate(num = n()) |> 
+  # Create a new column for the total of collisions for the neighbourhood (2017 to 2023)
+  rename(total_collisions_2017_2023 = num) |> 
   unique()
 
 #### Save data ####

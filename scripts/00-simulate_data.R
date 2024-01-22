@@ -56,7 +56,7 @@ simulated_data_one$collision_type |>
   length() == 4
 
 simulated_data_one$collision_type |>
-  unique() == c("Personal Injury", "Fail to Remain", "Property Damage", "Fatal")
+  unique() %in% c("Personal Injury", "Fail to Remain", "Property Damage", "Fatal")
 
 # 3. num_of_collisions is greater than or equal to 0.
 simulated_data_one$num_of_collisions |> min() >= 0
