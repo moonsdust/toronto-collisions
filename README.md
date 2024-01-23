@@ -5,7 +5,7 @@ As one of the fastest growing cities and densest cities in Canada, road and pede
 
 This repository is associated with the paper, "Motor Vehicle Collisions Reduced AcrossToronto During and After the Beginning of the COVID-19 Pandemic" by Emily Su. 
 
-## Important Notes
+## Important Note
 **About unedited_collisions_data.csv**: This CSV file is currently not in `inputs/data`
 due to its file size exceeding 100MB. To download `unedited_collisions_data.csv`, 
 run the script `01-download_data.R` located in the following path: `scripts/01-download_data.R`. 
