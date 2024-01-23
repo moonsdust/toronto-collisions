@@ -45,7 +45,7 @@ As of 2024, Toronto was reported to have one of the worst traffic congestion in 
 
 In this paper, I analyzed collisions trends from 2017 to 2023 specifically into collisions in Toronto neighbourhoods and wards, the types of collisions that occurred, and the number of pedestrians involved. In my findings, from 2020 onwards, there was a decline in collisions...
 
-By understanding collision trends across Toronto and over the years, it can help improved safety plans for strategies like Vision Zero for instance for pedestrians in specific areas of Toronto. 
+By understanding collision trends across Toronto and over the years, it can assist with how current safety plans like Vision Zero can improve and assist with being more strategic such as safety plans in specific locations of Toronto. 
 
 # Data {#sec-data}
 The data used by the paper are `City Wards` [@citecitywards], `Ward Profiles (25-Ward Model)` [@citewardprofiles], and `Police Annual Statistical Report - Traffic Collisions` [@citecollisionsdata]  datasets, which were sourced from Open Data Toronto Portal. These datasets were accessed using the `opendatatoronto` library [@citeopendatatoronto]. Another dataset that could have been used but was not was the `About Motor Vehicle Collisions involving Killed or Seriously Injured Persons` dataset from Open Data Toronto Portal. However, this dataset's most current record was in 2022 and is outdated for our purposes.
