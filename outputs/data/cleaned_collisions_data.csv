@@ -1,29 +1,57 @@
-year,collision_type,num_of_collisions
-2017,Fail to Remain,11411
-2017,Property Damage,50157
-2017,Personal Injury,10868
-2017,Fatal,60
-2018,Personal Injury,9832
-2018,Property Damage,55762
-2018,Fail to Remain,11851
-2018,Fatal,66
-2019,Personal Injury,8774
-2019,Property Damage,60865
-2019,Fail to Remain,9504
-2019,Fatal,62
-2020,Property Damage,34056
-2020,Fail to Remain,4251
-2020,Personal Injury,4950
-2020,Fatal,40
-2021,Personal Injury,5211
-2021,Fail to Remain,4430
-2021,Property Damage,32053
-2021,Fatal,55
-2022,Personal Injury,5930
-2022,Property Damage,47917
-2022,Fail to Remain,3600
-2022,Fatal,45
-2023,Property Damage,34262
-2023,Personal Injury,5831
-2023,Fail to Remain,8408
-2023,Fatal,28
+year,collision_type,num_of_collisions,num_of_pedestrians
+2017,Fail to Remain,11411,85
+2017,Property Damage,50157,133
+2017,Personal Injury,10868,1494
+2017,Personal Injury,10868,1494
+2017,Fatal,60,36
+2017,Property Damage,50157,133
+2017,Fail to Remain,11411,85
+2017,Fatal,60,36
+2018,Personal Injury,9832,1373
+2018,Property Damage,55762,92
+2018,Fail to Remain,11851,95
+2018,Personal Injury,9832,1373
+2018,Fatal,66,41
+2018,Fatal,66,41
+2018,Property Damage,55762,92
+2018,Fail to Remain,11851,95
+2019,Personal Injury,8774,1241
+2019,Personal Injury,8774,1241
+2019,Property Damage,60865,100
+2019,Fail to Remain,9504,167
+2019,Fail to Remain,9504,167
+2019,Fatal,62,37
+2019,Property Damage,60865,100
+2019,Fatal,62,37
+2020,Property Damage,34056,71
+2020,Fail to Remain,4251,123
+2020,Personal Injury,4950,840
+2020,Personal Injury,4950,840
+2020,Property Damage,34056,71
+2020,Fatal,40,21
+2020,Fail to Remain,4251,123
+2020,Fatal,40,21
+2021,Personal Injury,5211,782
+2021,Fail to Remain,4430,122
+2021,Property Damage,32053,59
+2021,Fatal,55,27
+2021,Personal Injury,5211,782
+2021,Property Damage,32053,59
+2021,Fatal,55,27
+2021,Fail to Remain,4430,122
+2022,Personal Injury,5930,897
+2022,Property Damage,47917,117
+2022,Fail to Remain,3600,208
+2022,Personal Injury,5930,897
+2022,Fail to Remain,3600,208
+2022,Fatal,45,19
+2022,Property Damage,47917,117
+2022,Fatal,45,19
+2023,Property Damage,34262,69
+2023,Personal Injury,5831,715
+2023,Fail to Remain,8408,168
+2023,Personal Injury,5831,715
+2023,Property Damage,34262,69
+2023,Fail to Remain,8408,168
+2023,Fatal,28,16
+2023,Fatal,28,16

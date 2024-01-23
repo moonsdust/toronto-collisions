@@ -1,140 +1,276 @@
 ---
-title: "(Working Title) Motor Vehicle Collisions Across Toronto"
-subtitle: "My subtitle if needed"
+title: "Motor Vehicle Collisions Reduced Across Toronto During and After the Beginning of the COVID-19 Pandemic"
 author: "Emily Su"
 thanks: "Data and code are available at: https://github.com/moonsdust/toronto-collisions"
 date: today
 date-format: "D MMMM YYYY"
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: "As one of the fastest growing cities and densest cities in Canada, road and pedestarian safety are growing concerns in Toronto espically after the COVID-19 Pandemic. This paper looks at trends of collisions from 2017 to 2023 in Toronto neighbourhoods and wards, types of collisions, and the number of pedestrians involved. The results shows that motor vehicle collisions and pedestarian involvement in them have decreased after the pandemic. However, further investigation is needed on the demographics of Toronto areas with high number of motor vehicle collisions."
 format:
   pdf:
     toc: true
 number-sections: true
 bibliography: references.bib
 ---
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+#### Preamble ####
+# Purpose: To create a graphs of the number of collisions and the types of collisions
+# in Toronto in different neighbourhoods from 2017 to 2023.
+# Author: Emily Su
+# Email: em.su@mail.utoronto.ca
+# Date: 23 January 2024
+# Prerequisites: All the scripts in the scripts folder have been ran starting from 00-install_packages.R.
+```
 
 ```{r}
 #| include: false
 #| warning: false
 #| message: false
 
-library(tidyverse)
-library(palmerpenguins)
+library("tidyverse") # Contains data-related packages
+library("knitr") # To make tables
+library("opendatatoronto")
+library("janitor") # To clean datasets
+library("dplyr")
+library("ggplot2") # To make graphs
+library("sf") # To make maps
 ```
-
 
 # Introduction
 
-You can and should cross-reference sections and sub-sections. 
 
-The remainder of this paper is structured as follows. @sec-data....
+As of 2024, Toronto was reported to have one of the worst traffic congestion in North America [@citeWorstCongestion]. As Toronto's population increased over the years, congestion on the road increased and road and pedestrian safety is a growing concern for many. Some also believe that roads have gotten unsafe after the pandemic. In order to reduce major injuries and traffic collision fatalities, the city of Toronto created the Vision Zero Safety Plan in 2016, which contains over 50 safety measures with the ultimate goal of eliminating fatalities on roads all together [@visionzero]. An ambitious goal however it raises the following question: how does motor vehicle collisions (MVC) compare from the early years of the plan to the present following the outbreak of the COVID-19 pandemic in 2020?
 
+In this paper, I analyzed collisions trends from 2017 to 2023 specifically into collisions in Toronto neighbourhoods and wards, the types of collisions that occurred, and the number of pedestrians involved. In my findings, from 2020 onwards, there was a decline in collisions...
 
+By understanding collision trends across Toronto and over the years, it can help improved safety plans for strategies like Vision Zero for instance for pedestrians in specific areas of Toronto. 
 
 # Data {#sec-data}
+The data used by the paper are `City Wards` [@citecitywards], `Ward Profiles (25-Ward Model)` [@citewardprofiles], and `Police Annual Statistical Report - Traffic Collisions` [@citecollisionsdata]  datasets, which were sourced from Open Data Toronto Portal. These datasets were accessed using the `opendatatoronto` library [@citeopendatatoronto]. Another dataset that could have been used but was not was the `About Motor Vehicle Collisions involving Killed or Seriously Injured Persons` dataset from Open Data Toronto Portal. However, this dataset's most current record was in 2022 and is outdated for our purposes.
 
-Some of our data is of penguins (@fig-bills), from @palmerpenguins.
+The datasets were cleaned and analyzed using `tidyverse` [@citetidyverse], `knitr` [@citeknitr], `janitor`[@citejanitor], `dplyr` [@citedplyr], `ggplot2` [@citeggplot2], and `sf` [@citesf]. Some of the datasets used for the data analysis combined the `Ward Profiles (25-Ward Model)` and `Police Annual Statistical Report - Traffic Collisions` in order to create datasets with the following variables: `collision_type`, `num_of_collisions`, `num_of_pedestrians`, `yearly_collision_num`, and `total_collisions_2017_2023`. `collision`. These variables were formed by mostly created group existing columns and counting the number of rows with certain column variables. The Toronto Police Services has defined MVC under 4 different categories: Fatal, Personal Injury, Fail to Remain, and Property Damage [@citecollisionsdata]. Fatal means that a person was killed during the vehicle collision, personal injury indicates a person was injured during the collision, fail to remain means that the person left the scene before after information was provided regarding the collision, and property damage
+indicates that property has been damaged during the collision. With this, the 4 types are possible values under the variable `collision_type`. `num_of_collisions` represents the number of collisions that occurred in either a neighbhourhood in a specific year or the number of collisions of a certain type of a certain year depending on the context. 
+`num_of_pedestrians` represents the number of pedestrians that were hit in the vehicle collision.`yearly_collision_num` and `total_collisions_2017_2023` are the count of collisions in a specific year and the total number of collisions from 2017 to 2023 for each Toronto neighbhourhood mentioned in the `Police Annual Statistical Report - Traffic Collisions` dataset. For the dataset regarding Toronto ward profiles, the following variables were created: `ward_name` (indicates the name of the Toronto ward), `pop_num` (represents the population size of Toronto wards as of 2020), and `avg_income` (signifies the average household income of each ward as of 2020). 
 
+## Results
 ```{r}
-#| label: fig-bills
-#| fig-cap: Bills of penguins
-#| echo: false
+#| include: false # Would run the code but it will have no output and code is not in the document 
+#| warning: false # Warnings are not included 
+#| message: false # Messages are not included 
 
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = "none") +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
+# Read in data
+
+# Map Data
+the_map <- readRDS('../data/cleaned_city_wards.RDS')
+og_cleaned_map_data <- read_csv('../data/cleaned_map_data.csv', show_col_types = FALSE)
+cleaned_map_data <-
+  og_cleaned_map_data |>
+  filter(
+    (round(long) != 0 & round(lat) != 0) # Filter out long and lat that are at 0 
+  ) 
+cleaned_map_data <- st_as_sf(cleaned_map_data, coords = c('long', 'lat'), crs = 4326)
+
+# Collision Data 
+cleaned_collisions_data <- read_csv("../data/cleaned_collisions_data.csv", show_col_types = FALSE)
+
+# Ward Data
+cleaned_ward_data <- read_csv("../data/cleaned_ward_data.csv", show_col_types = FALSE)
 ```
 
-Talk more about it.
+### Collisions across Toronto neighbourhoods and Wards (2017-2023) {#sec-location}
+There are 25 wards and 158 neighbourhoods in the city of Toronto. The distribution of MVC across different neighbourhoods and wards was investigated and the following was obtained:
+```{r}
+#| label: tbl-neighbhourhoodtable
+#| tbl-cap: Toronto Neighbourhoods with the most number of motor vehicle collisions from 2017 to 2023
+#| echo: false # Code will run and its output will show but the code itself will not be included in the doc
+#| warning: false # Warnings are not included 
+#| message: false # Messages are not included 
+# To create table corresponding to the map
 
-And also planes (@fig-planes). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
+collisions_num_per_neighbhourhood <- 
+arrange(og_cleaned_map_data, desc(total_collisions_2017_2023)) |>
+  select(neighbourhood, total_collisions_2017_2023) |>
+  unique() |>
+  rename (
+    "Neighbourhood" = neighbourhood,
+    "Number of Motor Vehicle Collisions (2017 to 2023)" = total_collisions_2017_2023
+  )
+  
+collisions_num_per_neighbhourhood |>
+  head() |>
+  kable() 
+```
 
 ```{r}
-#| label: fig-planes
-#| fig-cap: Relationship between wing length and width
+#| label: fig-numcollisionmap
+#| fig-cap: This figure shows seperate maps of the number of motor vehicle collisions from 2017 to 2023 across different Toronto wards. 
+  #| echo: false
+  #| warning: false
+  #| message: false
+  # Code snippet to add points to map is from https://stackoverflow.com/questions/58676661/geom-sf-mapping-points-shapes
+  # Code snippet to change colour of plots 
+  # https://www.rdocumentation.org/packages/ggplot2/versions/2.2.1/topics/scale_colour_gradient
+# Code snippet to change theme adapated from  
+# https://ggplot2.tidyverse.org/reference/theme.html
+ggplot() + 
+  geom_point(data = cleaned_map_data,
+    aes(color = num_of_collisions, geometry = geometry), alpha = 0.05,
+    stat = "sf_coordinates"
+  ) +
+  facet_wrap(vars(year), ncol = 4) +
+  # Change colours of the points
+  scale_color_gradient(low = 'lightblue', high = 'darkblue', name = "Number of Collisions") +
+  # Overlays a map of Toronto  
+  geom_sf(data = the_map, fill = "transparent") +
+  # Add ward number labels 
+  geom_sf_text(data=the_map, aes(label = area_short_code), color = '#333333', size = 1.5) + 
+  # Changes the font of the title and removes the x and y axis 
+  theme(plot.title = element_text(size = 9, face = 'bold'), rect = element_blank(), axis.text.x =
+        element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank(), legend.title = element_text(size = 7)) + 
+  labs(x = "Longitude",
+       y = "Latitude", 
+       title="Number of Motor Vehicle Collisions Across Toronto Wards from 2017 to 2023") +
+  theme(legend.position = c(0.9, 0.2))
+```
+
+```{r}
+#| label: tbl-wardprofilestats
+#| tbl-cap: Summary Statistics of Toronto Ward Profile in 2020 
+#| echo: false # Code will run and its output will show but the code itself will not be included in the doc
+#| warning: false # Warnings are not included 
+#| message: false # Messages are not included 
+
+cleaned_ward_data |>
+  select(pop_num, avg_income) |>
+  rename (
+    "Population Number" = pop_num, 
+    "Average Household Income"= avg_income
+  ) |>
+  summary() |>
+  kable()
+```
+In @tbl-neighbhourhoodtable, West Humber-Clairville has the greatest number of collisions with 2812 MVC from 2017 to 2023. West Humber-Clairville is located in ward 1, which from @fig-numcollisionmap is the region with the darkests shade of blue and is the most dense in terms of number of collisions [@citefinder]. Following this is Wexford/Maryvale, which is located in ward 21 with 2075 collisions. From @tbl-wardprofile, something interesting to note is that ward 1's average household income is \$38,135 with a population of 115120 people and ward 21's average household income is \$40,565 with a population of 115120 people.
+
+
+### Type of Collisions in Toronto (2017 - 2023) {#sec-types}
+```{r}
+#| label: tbl-collisiontype
+#| tbl-cap: Number of Motor Vehicle Collisions of Different Types Across Toronto from 2017 to 2023
+#| echo: false # Code will run and its output will show but the code itself will not be included in the doc
+#| warning: false # Warnings are not included 
+#| message: false # Messages are not included 
+
+cleaned_collisions_data_table <-
+cleaned_collisions_data |>
+  group_by(year) |>
+  unique() |>
+  mutate(
+    proportion =  round(num_of_collisions / sum(num_of_collisions), 2)
+  ) |>
+  ungroup() |>
+  rename (
+    "Year" = year,
+    "Collision Type" = collision_type,
+    "Number of Collisions" = num_of_collisions,
+    "Proportion of Collisions (Per Year)" = proportion
+  ) |>
+  select("Year", "Collision Type", "Number of Collisions", "Proportion of Collisions (Per Year)")
+cleaned_collisions_data_table |>
+  kable()
+```
+
+```{r}
+#| label: tbl-collisionstats
+#| tbl-cap: Summary Statistics of the Number of Motor Vehicle Collisions of Different Types Across Toronto from 2017 to 2023
+#| echo: false # Code will run and its output will show but the code itself will not be included in the doc
+#| warning: false # Warnings are not included 
+#| message: false # Messages are not included 
+cleaned_collisions_data_table |>
+  select("Number of Collisions") |>
+  summary() |>
+  kable()
+```
+
+```{r}
+#| label: fig-collisionhistogram
+#| fig-cap: This histogram reveals the number of motor vehicle collisions from 2017 to 2023 across Toronto and the different types of motor vehicle collisions. 
+#| echo: false
+#| warning: false
+#| message: false
+# Referenced chapter Chapter 5 of Telling Stories with Data by Rohan Alexander for 
+# scale_fill_viridis_d(), theme(), mapping = aes(...)
+cleaned_collisions_data |>
+  ggplot(mapping = aes(x = year, y = num_of_collisions, fill = collision_type)) +
+  geom_bar(stat="identity") +
+  ggtitle("Number of Motor Vehicle Collisions in Toronto from 2017 to 2023") +
+  labs(x = "Year", y = "Number of Collisions", fill = "Type of Collisions") +
+  theme(legend.position = "bottom", plot.title = element_text(size = 9, face = "bold"), rect = element_blank(), legend.title = element_text(size = 9), legend.text = element_text(size = 7)) +
+  scale_fill_viridis_d()
+```
+From @fig-collisionhistogram, when comparing the overall number of collisions before 2020 and 2020 onwards, there is a overall annual decrease with the overall number of collisions. However, collisions involving property damage remains the majority of collision cases over the years. We can see this decrease from 2019 and 2020 from about 79205 collisions to 43297 collisions. According to @tbl-collisionstats and @tbl-collisiontype, the peak number of property damage collisions was at 60865 in 2019, which made up 77% of the collisions in that year. However property damage collisions in 2020 was up to 79% of collisions in 2020. 
+
+### Pedestrians Involved in a Motor Vehicle Collision (2017-2023) {#sec-pedes}
+
+```{r}
+#| label: tbl-pedestrianhistogram
+#| tbl-cap: Number of Pedestrians Involved in a Motor Vehicle Collision from 2017 to 2023
+#| echo: false # Code will run and its output will show but the code itself will not be included in the doc
+#| warning: false # Warnings are not included 
+#| message: false # Messages are not included 
+
+# Add up num of pedestrians for each year, get number of collisions each year, and the proportion
+cleaned_collisions_data_yearly <-
+  cleaned_collisions_data |>
+  group_by(year) |>
+  unique() |>
+  mutate (
+    yearly_num_pedestrians = sum(num_of_pedestrians)
+  ) |>
+  mutate(
+    num_of_collisons_year = sum(num_of_collisions)
+  ) |>
+  mutate(
+    proportion = round(yearly_num_pedestrians / num_of_collisons_year, 3)
+  ) |>
+  ungroup()
+  
+  
+cleaned_collisions_data_yearly |>
+  select(year, yearly_num_pedestrians, proportion) |>
+  unique() |>
+  rename(
+    "Year" = year,
+    "Number of pedestrians involved (Per Year)" = yearly_num_pedestrians, 
+    "Proportion of pedestrians involved (Per Year)" = proportion
+  ) |>
+  kable()
+```
+
+```{r}
+#| label: fig-pedestrianhistogram
+#| fig-cap: This histogram reveals the number of pedestrians involved in a motor vehicle collisions from 2017 to 2023 across Toronto. 
 #| echo: false
 #| warning: false
 #| message: false
 
-analysis_data <- read_csv(here::here("outputs/data/analysis_data.csv"))
+# Referenced tutorial notes from summer STA238 2023 to obtain the code portion of geom_bar(stat="identity") and plot.title
+# Referenced chapter Chapter 5 of Telling Stories with Data by Rohan Alexander for 
+# scale_fill_viridis_d(), theme(), mapping = aes(...)
 
-analysis_data |> 
-  ggplot(aes(x = width, y = length)) +
-  geom_point(alpha = 0.8) +
-  theme_minimal() +
-  labs(x = "Wing width (mm)",
-       y = "Wing length (mm)")
+cleaned_collisions_data_yearly |>
+  ggplot(mapping = aes(x = year, y = yearly_num_pedestrians)) +
+  geom_col(fill="lightblue",colour="lightblue") +
+  ggtitle("Pedestrians involved in Motor Vehicle Collisions in Toronto from 2017 to 2023") +
+  labs(x = "Year", y = "Number of Collisions Involved") +
+  theme(plot.title = element_text(size = 9, face = "bold"), rect = element_blank(), legend.title = element_text(size = 9), legend.text = element_text(size = 7)) 
 ```
 
-Talk way more about it. 
 
 
 
-# Model
-
-The goal of our modelling strategy is twofold. Firstly,...
-
-Here we briefly describe the Bayesian analysis model used to investigate... Background details and diagnostics are included in [Appendix -@sec-model-details].
-
-## Model set-up
-
-Define $y_i$ as the number of seconds that the plane remained aloft. Then $\beta_i$ is the wing width and $\gamma_i$ is the wing length, both measured in millimeters.  
-
-\begin{align} 
-y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
-\mu_i &= \alpha + \beta_i + \gamma_i\\
-\alpha &\sim \mbox{Normal}(0, 2.5) \\
-\beta &\sim \mbox{Normal}(0, 2.5) \\
-\gamma &\sim \mbox{Normal}(0, 2.5) \\
-\sigma &\sim \mbox{Exponential}(1)
-\end{align}
-
-We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
-
-
-### Model justification
-
-We expect a positive relationship between the size of the wings and time spent aloft. In particular...
-
-We can use maths by including latex between dollar signs, for instance $\theta$.
-
-
-# Results
-
-Our results are summarized in @tbl-modelresults.
-
-```{r}
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-
-library(rstanarm)
-
-first_model <-
-  readRDS(file = here::here("outputs/models/first_model.rds"))
-```
-
-```{r}
-#| echo: false
-#| eval: true
-#| label: tbl-modelresults
-#| tbl-cap: "Explanatory models of flight time based on wing width and wing length"
-#| warning: false
-
-modelsummary::modelsummary(
-  list(
-    "First model" = first_model
-  ),
-  statistic = "mad",
-  fmt = 2
-)
-```
-
+\newpage
 
 
 
@@ -142,7 +278,8 @@ modelsummary::modelsummary(
 
 ## First discussion point {#sec-first-point}
 
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
+According to @tbl-wardprofilestats and @sec-location, ward 1 and ward 21's population number is above the mean of 110452 people (also known as average) however both wards are below the mean of $46,436 in terms of average household income. 
+
 
 ## Second discussion point
 
@@ -150,72 +287,34 @@ If my paper were 10 pages, then should be be at least 2.5 pages. The discussion 
 
 ## Weaknesses and next steps
 
-Weaknesses and next steps should also be included.
 
 \newpage
+
+
+
 
 \appendix
 
 # Appendix {-}
-
-
-# Additional data details
-
-# Model details {#sec-model-details}
-
-## Posterior predictive check
-
-In @fig-ppcheckandposteriorvsprior-1 we implement a posterior predictive check. This shows...
-
-In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. This shows... 
-
 ```{r}
-#| eval: true
-#| echo: false
-#| message: false
-#| warning: false
-#| label: fig-ppcheckandposteriorvsprior
-#| layout-ncol: 2
-#| fig-cap: "Examining how the model fits, and is affected by, the data"
-#| fig-subcap: ["Posterior prediction check", "Comparing the posterior with the prior"]
+#| label: tbl-wardprofile
+#| tbl-cap: Toronto Ward Profile in 2020
+#| echo: false # Code will run and its output will show but the code itself will not be included in the doc
+#| warning: false # Warnings are not included 
+#| message: false # Messages are not included 
 
-pp_check(first_model) +
-  theme_classic() +
-  theme(legend.position = "bottom")
-
-posterior_vs_prior(first_model) +
-  theme_minimal() +
-  scale_color_brewer(palette = "Set1") +
-  theme(legend.position = "bottom") +
-  coord_flip()
+cleaned_ward_data |>
+  rename (
+    "Ward Number" = ward_num,
+    "Ward Name" = ward_name,
+    "Population Number" = pop_num, 
+    "Average Household Income"= avg_income
+  ) |>
+  kable()
 ```
-
-## Diagnostics
-
-@fig-stanareyouokay-1 is a trace plot. It shows... This suggests...
-
-@fig-stanareyouokay-2 is a Rhat plot. It shows... This suggests...
-
-```{r}
-#| echo: false
-#| eval: true
-#| message: false
-#| warning: false
-#| label: fig-stanareyouokay
-#| fig-cap: "Checking the convergence of the MCMC algorithm"
-#| fig-subcap: ["Trace plot", "Rhat plot"]
-#| layout-ncol: 2
-
-plot(first_model, "trace")
-
-plot(first_model, "rhat")
-```
-
 
 
 \newpage
 
 
 # References
-
-
