@@ -6,7 +6,7 @@
 # Contact: em.su@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: tidyverse has been installed by running 00-install_packages.R
-# and datasets have been downloaded by running 01-download_data.R. 
+# and datasets have been downloaded by running 01-download_data.R.
 
 #### Workspace setup ####
 library(tidyverse)
@@ -84,21 +84,25 @@ cleaned_collisions_data$ftr_collisions <- as.numeric(cleaned_collisions_data$ftr
 # Convert column pedestrian_involved from character to numeric
 cleaned_collisions_data$pedestrian_involved <- as.character(cleaned_collisions_data$pedestrian_involved)
 
-# Dataset 1 (number of collisions, collision types, and what year the collision occurred)
-# Expected Columns: year | collision_type | num_of_collisions
+# Dataset 1 (number of collisions, collision types, what year the collision occurred, 
+# and number of pedestrians involved in the crash)
+# Expected Columns: year | collision_type | num_of_collisions | num_of_pedestrians
 # Create a new dataset
 dataset_1 <-
   cleaned_collisions_data |>
-  select(-c(long_wgs84,lat_wgs84, neighbourhood_158, pedestrian_involved)) |>
+  select(-c(long_wgs84,lat_wgs84, neighbourhood_158)) |>
   group_by(year, fatalities, injury_collisions, pd_collisions, ftr_collisions) |>
   mutate(num = n()) |> # count number of rows based on premise and year
   rename(num_of_collisions = num) |>
-  unique() |> # This will filter out repeated rows  
+  mutate(
+    num_of_pedestrians = sum(pedestrian_involved == "Yes")
+  ) |>
+  unique() |> # This will filter out repeated rows
   filter(
-    (fatalities == 1 && injury_collisions == 0 && pd_collisions == 0 && ftr_collisions == 0) |
-      (fatalities == 0 && injury_collisions == 1 && pd_collisions == 0 && ftr_collisions == 0) |
-      (fatalities == 0 && injury_collisions == 0 && pd_collisions == 1 && ftr_collisions == 0) |
-      (fatalities == 0 && injury_collisions == 0 && pd_collisions == 0 && ftr_collisions == 1)
+    (fatalities == 1 & injury_collisions == 0 & pd_collisions == 0 & ftr_collisions == 0) |
+      (fatalities == 0 & injury_collisions == 1 & pd_collisions == 0 & ftr_collisions == 0) |
+      (fatalities == 0 & injury_collisions == 0 & pd_collisions == 1 & ftr_collisions == 0) |
+      (fatalities == 0 & injury_collisions == 0 & pd_collisions == 0 & ftr_collisions == 1)
     ) # Only include rows that is 1 in only one of the 4 columns 
 
 # Add a new column collision_type by matching current columns to be values of this new column, 
@@ -109,16 +113,16 @@ dataset_1 <-
   mutate( 
     collision_type = 
       case_when( #  
-      (fatalities == 1 && injury_collisions == 0 && pd_collisions == 0 && ftr_collisions == 0) ~ "Fatal",
-      (fatalities == 0 && injury_collisions == 1 && pd_collisions == 0 && ftr_collisions == 0) ~ "Personal Injury", 
-      (fatalities == 0 && injury_collisions == 0 && pd_collisions == 1 && ftr_collisions == 0) ~ "Property Damage", 
-      (fatalities == 0 && injury_collisions == 0 && pd_collisions == 0 && ftr_collisions == 1) ~ "Fail to Remain", 
+      (fatalities == 1 & injury_collisions == 0 & pd_collisions == 0 & ftr_collisions == 0) ~ "Fatal",
+      (fatalities == 0 & injury_collisions == 1 & pd_collisions == 0 & ftr_collisions == 0) ~ "Personal Injury", 
+      (fatalities == 0 & injury_collisions == 0 & pd_collisions == 1 & ftr_collisions == 0) ~ "Property Damage", 
+      (fatalities == 0 & injury_collisions == 0 & pd_collisions == 0 & ftr_collisions == 1) ~ "Fail to Remain", 
       TRUE ~ "None"
       )
     ) |>
   ungroup() |>
   select(-c(fatalities, injury_collisions, pd_collisions, ftr_collisions)) |> # Remove columns
-  select(year, collision_type, num_of_collisions) # Rearrange columns in desired order  
+  select(year, collision_type, num_of_collisions, num_of_pedestrians) # Rearrange columns in desired order  
 
 
 # Dataset 2 (cleaned_ward_data)
@@ -228,7 +232,7 @@ cleaned_ward_data <-
 # neighbourhood of collision, and number of collisions of each neighbourhood
 # from 2017 to 2023)
 # Expected: year | collision_type | long | lat | neighbourhood | pedestrian_involved
-# num_of_collisions | yearly_collision_num | total_collisions_2017_2023
+# num_of_collisions | yearly_collision_num | total_collisions_2017_2023 
 
 dataset_3 <- 
   cleaned_collisions_data |>
@@ -258,23 +262,22 @@ dataset_3 <-
     long = long_wgs84,
     lat = lat_wgs84
   ) |>
-  filter(
-    (round(long) != 0 & round(lat) != 0) # Filter out long and lat that are at 0 
-  ) |>
   group_by(neighbourhood, collision_type) |>
   mutate(num = n()) |> # count number of rows based on neighbourhood and collision type
   # Create a new column for the number of collisions for the neighbourhood for each 
   # type of collision (2017 to 2023)
   rename(num_of_collisions = num) |>
+  ungroup() |>
   group_by(neighbourhood, year) |>
   mutate(num = n()) |> # count number of rows based on neighbourhood and year
   # Create a new column for the yearly collisions number for the neighbourhood (2017 to 2023)
   rename(yearly_collision_num = num) |>
+  ungroup() |>
   group_by(neighbourhood) |> # count number of rows based on neighbourhood
   mutate(num = n()) |> 
   # Create a new column for the total of collisions for the neighbourhood (2017 to 2023)
-  rename(total_collisions_2017_2023 = num) |> 
-  unique()
+  rename(total_collisions_2017_2023 = num) |>
+  ungroup()
 
 #### Save data ####
 # Save dataset 1

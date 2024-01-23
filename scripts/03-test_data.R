@@ -23,7 +23,7 @@ dataset_3 <- read_csv("outputs/data/cleaned_map_data.csv")
 #### Test data ####
 
 # Tests on dataset 1 (Collision Data)
-# Expected Columns: year | collision_type | num_of_collisions 
+# Expected Columns: year | collision_type | num_of_collisions | num_of_pedestrians
 # 1. "year" does not contain years before 2017 and after 2023
 dataset_1$year |> min() == 2017
 dataset_1$year |> max() == 2023
@@ -40,10 +40,15 @@ dataset_1$collision_type |>
 # 3. num_of_collisions is greater than or equal to 0.
 dataset_1$num_of_collisions |> min() >= 0
 
-# 4. Check the classes
+# 3. num_of_pedestrians is greater than or equal to 0.
+dataset_1$num_of_pedestrians |> min() >= 0
+
+# 5. Check the classes
 class(dataset_1$year) == "numeric"
 class(dataset_1$num_of_collisions) == "numeric"
 class(dataset_1$collision_type) == "character"
+class(dataset_1$num_of_pedestrians) == "integer"
+
 
 
 # Tests on dataset 2 (Ward Data)
