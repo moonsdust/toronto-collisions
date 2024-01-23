@@ -278,7 +278,7 @@ cleaned_collisions_data_yearly |>
 
 ## First discussion point {#sec-first-point}
 
-According to @tbl-wardprofilestats and @sec-location, ward 1 and ward 21's population number is above the mean of 110452 people (also known as average) however both wards are below the mean of $46,436 in terms of average household income. 
+According to @tbl-wardprofilestats and @sec-location, ward 1 and ward 21's population number are above the mean of 110452 people (also known as average) however both wards are below the mean of $46,436 in terms of average household income. 
 
 
 ## Second discussion point
