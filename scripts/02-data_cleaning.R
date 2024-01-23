@@ -85,7 +85,7 @@ cleaned_collisions_data$ftr_collisions <- as.numeric(cleaned_collisions_data$ftr
 cleaned_collisions_data$pedestrian_involved <- as.character(cleaned_collisions_data$pedestrian_involved)
 
 # Dataset 1 (number of collisions, collision types, what year the collision occurred, 
-# and number of pedestrians involved in the crash)
+# and number of pedestrians involved in the collision)
 # Expected Columns: year | collision_type | num_of_collisions | num_of_pedestrians
 # Create a new dataset
 dataset_1 <-
