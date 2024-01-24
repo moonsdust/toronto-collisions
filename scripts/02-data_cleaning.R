@@ -16,6 +16,8 @@ library(sf)
 
 #### Clean data ####
 
+# Code below referenced Alexander (2023) 
+
 ## Read in datasets ##
 raw_collisions_data <- read_csv("inputs/data/unedited_collisions_data.csv", show_col_types = FALSE)
 raw_ward_profiles_data <- read_csv("inputs/data/unedited_ward_profiles_data.csv", show_col_types = FALSE)
