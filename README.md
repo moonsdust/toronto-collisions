@@ -17,6 +17,7 @@ run the script `01-download_data.R` located in the following path: `scripts/01-d
 The repo is structured as:
 
 -   `input/data` contains the data sources used in analysis including the raw data.
+-   `input/sketches` contains the sketches made when planning out how the dataset should look and the resulting graphs.
 -   `outputs/data` contains the cleaned dataset that was constructed.
 -   `outputs/paper` contains the files used to generate the paper, including the Quarto document and reference bibliography file, as well as the PDF of the paper. 
 -   `scripts` contains the R scripts used to simulate, download and clean data.
