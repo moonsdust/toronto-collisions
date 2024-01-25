@@ -1,10 +1,10 @@
 ---
-title: "Motor Vehicle Collisions Reduced Across Toronto During and After the Beginning of the COVID-19 Pandemic"
+title: "Motor Vehicle Collisions Decreased in Toronto During and After the Beginning of the COVID-19 Pandemic"
 author: "Emily Su"
 thanks: "Data and code are available at: https://github.com/moonsdust/toronto-collisions"
 date: today
 date-format: "D MMMM YYYY"
-abstract: "As one of the fastest growing cities and densest cities in Canada, road and pedestarian safety are growing concerns in Toronto, especially after the COVID-19 Pandemic. This paper looks at trends of collisions from 2017 to 2023 in Toronto neighbourhoods and wards, types of collisions, and the number of pedestrians involved. The results shows that motor vehicle collisions and pedestrian involvement in them have decreased after the pandemic. However, further investigations is needed on the demographics of Toronto areas with high number of motor vehicle collisions."
+abstract: "As one of the fastest growing cities and densest cities in Canada, road and pedestrian safety are growing concerns in Toronto, especially after the COVID-19 Pandemic. This paper looks at trends of collisions from 2017 to 2023 in Toronto neighbourhoods and wards, types of collisions, and the number of pedestrians involved. The results shows that motor vehicle collisions and pedestrian involvement in them have decreased after the pandemic but are still prevalent in more lower-income areas. Further investigation is needed on the demographics of Toronto areas with high number of motor vehicle collisions."
 format:
   pdf:
     toc: true
@@ -16,8 +16,7 @@ bibliography: references.bib
 #| warning: false
 #| message: false
 #### Preamble ####
-# Purpose: To create a graphs of the number of collisions and the types of collisions
-# in Toronto in different neighbourhoods from 2017 to 2023.
+# Purpose: To create graphs and analyze the number of collisions in different Toronto locations and the types of collisions rom 2017 to 2023.
 # Author: Emily Su
 # Email: em.su@mail.utoronto.ca
 # Date: 23 January 2024
@@ -38,23 +37,6 @@ library("ggplot2") # To make graphs
 library("sf") # To make maps
 ```
 
-# Introduction
-
-
-As of 2024, Toronto was reported to have one of the worst traffic congestion in North America [@citeWorstCongestion]. As Toronto's population increased over the years, congestion on the road increased and road and pedestrian safety is a growing concern for many. Some also believe that roads have gotten unsafe after the pandemic. In order to reduce major injuries and traffic collision fatalities, the city of Toronto created the Vision Zero Safety Plan in 2016, which contains over 50 safety measures with the ultimate goal of eliminating fatalities on roads all together [@visionzero]. An ambitious goal however it raises the following question: how does motor vehicle collisions (MVC) compare from the early years of the plan to the present following the outbreak of the COVID-19 pandemic in 2020?
-
-In this paper, I analyzed collisions trends from 2017 to 2023 specifically into collisions in Toronto neighbourhoods and wards, the types of collisions that occurred, and the number of pedestrians involved. In my findings, from 2020 onwards, there was a decline in collisions...
-
-By understanding collision trends across Toronto and over the years, it can assist with how current safety plans like Vision Zero can improve and assist with being more strategic such as safety plans in specific locations of Toronto. 
-
-# Data {#sec-data}
-The data used by the paper are `City Wards` [@citecitywards], `Ward Profiles (25-Ward Model)` [@citewardprofiles], and `Police Annual Statistical Report - Traffic Collisions` [@citecollisionsdata]  datasets, which were sourced from Open Data Toronto Portal. These datasets were accessed using the `opendatatoronto` library [@citeopendatatoronto]. Another dataset that could have been used but was not was the `About Motor Vehicle Collisions involving Killed or Seriously Injured Persons` dataset from Open Data Toronto Portal. However, this dataset's most current record was in 2022 and is outdated for our purposes.
-
-The datasets were simulated, cleaned, analyzed, and tested using the statistical programming language `R` [@citeR], `tidyverse` [@citetidyverse], `knitr` [@citeknitr], `janitor`[@citejanitor], `dplyr` [@citedplyr], `ggplot2` [@citeggplot2], and `sf` [@citesf]. Some of the datasets used for the data analysis combined the `Ward Profiles (25-Ward Model)` and `Police Annual Statistical Report - Traffic Collisions` in order to create datasets with the following variables: `collision_type`, `num_of_collisions`, `num_of_pedestrians`, `yearly_collision_num`, and `total_collisions_2017_2023`. `collision`. These variables were formed by mostly created group existing columns and counting the number of rows with certain column variables. The Toronto Police Services has defined MVC under 4 different categories: Fatal, Personal Injury, Fail to Remain, and Property Damage [@citecollisionsdata]. Fatal means that a person was killed during the vehicle collision, personal injury indicates a person was injured during the collision, fail to remain means that the person left the scene before after information was provided regarding the collision, and property damage
-indicates that property has been damaged during the collision. With this, the 4 types are possible values under the variable `collision_type`. `num_of_collisions` represents the number of collisions that occurred in either a neighbhourhood in a specific year or the number of collisions of a certain type of a certain year depending on the context. 
-`num_of_pedestrians` represents the number of pedestrians that were hit in the vehicle collision.`yearly_collision_num` and `total_collisions_2017_2023` are the count of collisions in a specific year and the total number of collisions from 2017 to 2023 for each Toronto neighbhourhood mentioned in the `Police Annual Statistical Report - Traffic Collisions` dataset. For the dataset regarding Toronto ward profiles, the following variables were created: `ward_name` (indicates the name of the Toronto ward), `pop_num` (represents the population size of Toronto wards as of 2020), and `avg_income` (signifies the average household income of each ward as of 2020). 
-
-## Results
 ```{r}
 #| include: false # Would run the code but it will have no output and code is not in the document 
 #| warning: false # Warnings are not included 
@@ -68,7 +50,7 @@ og_cleaned_map_data <- read_csv('../data/cleaned_map_data.csv', show_col_types =
 cleaned_map_data <-
   og_cleaned_map_data |>
   filter(
-    (round(long) != 0 & round(lat) != 0) # Filter out long and lat that are at 0 
+    (round(long) != 0 & round(lat) != 0) # Filter out longitude and latitude that are at 0 
   ) 
 cleaned_map_data <- st_as_sf(cleaned_map_data, coords = c('long', 'lat'), crs = 4326)
 
@@ -79,23 +61,50 @@ cleaned_collisions_data <- read_csv("../data/cleaned_collisions_data.csv", show_
 cleaned_ward_data <- read_csv("../data/cleaned_ward_data.csv", show_col_types = FALSE)
 ```
 
-### Collisions across Toronto neighbourhoods and Wards (2017-2023) {#sec-location}
-There are 25 wards and 158 neighbourhoods in the city of Toronto. The distribution of MVC across different neighbourhoods and wards was investigated and the following was obtained:
+# Introduction
+
+As of 2024, Toronto was reported to have one of the worst traffic congestion in North America [@citeWorstCongestion]. As Toronto's population increases over the years, congestion on the road increased and road and pedestrian safety is a growing concern for many. Some also believe that roads have gotten unsafer in the years after the pandemic. In a 2023 study done by Ipsos surveying Canadians on road safety, they mentioned that concerns about road safety has increased to 65% in 2023 from 59% in 2021 [@citeIpsos]. In order to reduce traffic collision injuries and fatalities, the city of Toronto created the Vision Zero Safety Plan in 2016, which contains over 50 safety measures with the ultimate goal of eliminating fatalities on roads all together [@visionzero]. An ambitious goal yet it raises the question how effective is this plan across Toronto over the years. We investigated this question and the following: how does motor vehicle collisions compare from the early years of the plan to the present following the outbreak of the COVID-19 pandemic in 2020?
+
+In this paper, collisions trends were analyzed from 2017 to 2023 specifically into motor vehicle collisions in Toronto neighbourhoods and wards, the types of motor vehicle collisions that occurred, and the number of pedestrians involved in them. In our findings, there was a decline in motor vehicle collisions overall from 2020 onwards. However, we saw that the locations motor vehicle collisions occurred at stayed consistent over the years. We also found that the wards that make up a greater proportion of motor vehicle collisions had average household incomes that are below Toronto's overall average household income. By understanding collision trends over the years in Toronto, it can aid with identifying areas of improvement of current safety plans like Vision Zero and overall helping others feel safer in the city. 
+
+In the rest of this paper, the data section will cover the datasets used, define variables used by our tables and graphs, and briefly explain the data cleaning process. In the results section, we will reveal tables and graphs made on our datasets and explain what they show. In the discussion section, we will connect back to the real world and explain what the results could mean, the implication of our results, potential areas of improvement for the paper, and suggestions for future works. Finally, the appendix section will include the entire table of some of our results. 
+
+# Data {#sec-data}
+The data used by the paper are `City Wards` [@citecitywards], `Ward Profiles (25-Ward Model)` [@citewardprofiles], and `Police Annual Statistical Report - Traffic Collisions` [@citecollisionsdata]  datasets, which were sourced from the City of Toronto's Open Data Portal. These datasets were accessed using the `opendatatoronto` library [@citeopendatatoronto]. Another dataset that could have been used was the `About Motor Vehicle Collisions involving Killed or Seriously Injured Persons` dataset from Open Data Toronto Portal. However, this dataset's most current record was in 2022 and is outdated for our purposes.
+
+The datasets were simulated, cleaned, analyzed, and tested using the `R` programming language [@citeR], `tidyverse` [@citetidyverse], `knitr` [@citeknitr], `janitor`[@citejanitor], `dplyr` [@citedplyr], `ggplot2` [@citeggplot2], and `sf` [@citesf]. 
+
+
+Some of the datasets used for the data analysis combined the `Ward Profiles (25-Ward Model)` and `Police Annual Statistical Report - Traffic Collisions` in order to create datasets with the following variables: `collision_type`, `num_of_collisions`, `num_of_pedestrians`, `yearly_collision_num`, and `total_collisions_2017_2023`. `collision`. These variables were formed by mostly created group existing columns and counting the number of rows with certain column variables. The Toronto Police Services has defined motor vehicle collisions under 4 different categories: Fatal, Personal Injury, Fail to Remain, and Property Damage [@citecollisionsdata]. Fatal means that a person was killed during the vehicle collision, personal injury indicates a person was injured during the collision, fail to remain means that the person left the scene before after information was provided regarding the collision, and property damage indicates that property has been damaged during the collision. With this, the 4 types are possible values under the variable `collision_type`. `num_of_collisions` represents the number of collisions that occurred in either a neighbhourhood in a specific year or the number of collisions of a certain type of a certain year depending on the context. Due to the complexity of motor vehicle collisions and the different combinations of ways they can be categorized, our analysis looked at collisions that were defined in only 1 of the 4 categories.
+
+`num_of_pedestrians` represents the number of pedestrians that were hit in the vehicle collision.`yearly_collision_num` and `total_collisions_2017_2023` are the count of collisions in a specific year and the total number of collisions from 2017 to 2023 for each Toronto neighbhourhood mentioned in the `Police Annual Statistical Report - Traffic Collisions` dataset. For the dataset regarding Toronto ward profiles, the following variables were created: `ward_name` (indicates the name of the Toronto ward), `pop_num` (represents the population size of Toronto wards as of 2020), and `avg_income` (signifies the average household income of each ward as of 2020). 
+
+# Results {#sec-result}
+### Motor vehicle collisions across Toronto neighbourhoods and wards (2017-2023) {#sec-location}
+As of 2024, There are 25 wards and 158 neighbourhoods in the city of Toronto. The distribution of motor vehicle collisions across different neighbourhoods and wards was investigated and the following was obtained:
 ```{r}
 #| label: tbl-neighbhourhoodtable
-#| tbl-cap: Toronto Neighbourhoods with the most number of motor vehicle collisions from 2017 to 2023
+#| tbl-cap: Toronto neighbourhoods with the most number of motor vehicle collisions from 2017 to 2023
 #| echo: false # Code will run and its output will show but the code itself will not be included in the doc
 #| warning: false # Warnings are not included 
 #| message: false # Messages are not included 
 # To create table corresponding to the map
 
 collisions_num_per_neighbhourhood <- 
-arrange(og_cleaned_map_data, desc(total_collisions_2017_2023)) |>
+  # Order the data based on the total number of collisions from 2017 to 2023
+  arrange(og_cleaned_map_data, desc(total_collisions_2017_2023)) |>
+  # Choose the columns neighbourhood and total_collisions_2017_2023 to include. 
   select(neighbourhood, total_collisions_2017_2023) |>
+  # Keep unique rows 
   unique() |>
-  rename (
-    "Neighbourhood" = neighbourhood,
-    "Number of Motor Vehicle Collisions (2017 to 2023)" = total_collisions_2017_2023
+  # Create new column for the proportion of motor vehicle collisions 
+  mutate( 
+    proportion =  round(total_collisions_2017_2023 / sum(total_collisions_2017_2023), 2)
+  ) |>
+  rename(
+    "Neighbourhood Name and Number" = neighbourhood,
+    "Number of Motor Vehicle Collisions (2017 to 2023)" = total_collisions_2017_2023,
+    "Proportion of Motor Vehicle Collisions (2017 to 2023)"  = proportion
   )
   
 collisions_num_per_neighbhourhood |>
@@ -104,21 +113,40 @@ collisions_num_per_neighbhourhood |>
 ```
 
 ```{r}
+#| label: tbl-wardprofilestats
+#| tbl-cap: Minimum, quartiles, median, and maximum of population size and average household income across Toronto wards in 2020 
+#| echo: false # Code will run and its output will show but the code itself will not be included in the doc
+#| warning: false # Warnings are not included 
+#| message: false # Messages are not included
+
+cleaned_ward_data |>
+  # Choose pop_num and avg_income as columns to show 
+  select(pop_num, avg_income) |>
+  rename (
+    "Population Number" = pop_num, 
+    "Average Household Income (CAD)"= avg_income
+  ) |>
+  summary() |>
+  kable()
+```
+```{r}
 #| label: fig-numcollisionmap
-#| fig-cap: This figure shows seperate maps of the number of motor vehicle collisions from 2017 to 2023 across different Toronto wards. 
+#| fig-cap: Number of motor vehicle collisions from 2017 to 2023 across different Toronto wards. 
 #| echo: false
 #| warning: false
 #| message: false
-  # Code snippet to add points to map is from https://stackoverflow.com/questions/58676661/geom-sf-mapping-points-shapes
-  # Code snippet to change colour of plots 
-  # https://www.rdocumentation.org/packages/ggplot2/versions/2.2.1/topics/scale_colour_gradient
+# Code snippet to add points to map is from https://stackoverflow.com/questions/58676661/geom-sf-mapping-points-shapes
+# Code snippet to change colour of plots 
+# https://www.rdocumentation.org/packages/ggplot2/versions/2.2.1/topics/scale_colour_gradient
 # Code snippet to change theme adapated from  
 # https://ggplot2.tidyverse.org/reference/theme.html
 ggplot() + 
+  # Adds in points regarding number of collisions to graph 
   geom_point(data = cleaned_map_data,
     aes(color = num_of_collisions, geometry = geometry), alpha = 0.05,
     stat = "sf_coordinates"
   ) +
+  # Creates different graphs for each year 
   facet_wrap(vars(year), ncol = 4) +
   # Change colours of the points
   scale_color_gradient(low = 'lightblue', high = 'darkblue', name = "Number of Collisions") +
@@ -128,65 +156,64 @@ ggplot() +
   geom_sf_text(data=the_map, aes(label = area_short_code), color = '#333333', size = 1.5) + 
   # Changes the font of the title and removes the x and y axis 
   theme(plot.title = element_text(size = 9, face = 'bold'), rect = element_blank(), axis.text.x =
-        element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank(), legend.title = element_text(size = 7)) + 
+        element_blank(), axis.text.y = element_blank(), axis.ticks = element_blank(), legend.title = 
+          element_text(size = 7)) + 
   labs(x = "Longitude",
        y = "Latitude", 
        title="Number of Motor Vehicle Collisions Across Toronto Wards from 2017 to 2023") +
   theme(legend.position = c(0.9, 0.2))
 ```
+@tbl-neighbhourhoodtable reveals that the neighbourhood with the highest number of motor vehicle collisions and the approximately how many motor vehicle collisions from 2017 to 2023 occurred in each neighbourhood. The neighbourhoods with a high number of collisions are the following: West Humber-Clairville (approximately 2%), Wexford/Maryvale (approximately 2%), South Riverdale (approximately 2%), York University Heights (approximately 2%), Clairlea-Birchmount (approximately 2%), Birchmount (approximately 1%), and Etobicoke City Centre (approximately 1%). The full table of @tbl-neighbhourhoodtable can be found here @tbl-neighbhourhoodtablefull in the Appendix section with the rest of the neighbourhoods making up approximately 1% of collisions or less. 
 
-```{r}
-#| label: tbl-wardprofilestats
-#| tbl-cap: Summary Statistics of Toronto Ward Profile in 2020 
-#| echo: false # Code will run and its output will show but the code itself will not be included in the doc
-#| warning: false # Warnings are not included 
-#| message: false # Messages are not included 
+In @tbl-neighbhourhoodtable, West Humber-Clairville has the largest amount of collisions with 2812 motor vehicle collisions from 2017 to 2023. West Humber-Clairville is located in ward 1, which from @fig-numcollisionmap is the region with the darkests shade of blue and has the highest density of points [@citefinder]. Following this is Wexford/Maryvale, which is located in ward 21 with 2075 collisions [@citefinder]. The rest of the neighbourhood are in the following wards based on @citefinder: South Riverdale is in Ward 14, York University Heights is in Ward 7, Clairlea-Birchmount is in Ward 20, and Etobicoke City Centre is in Ward 2. 
 
-cleaned_ward_data |>
-  select(pop_num, avg_income) |>
-  rename (
-    "Population Number" = pop_num, 
-    "Average Household Income"= avg_income
-  ) |>
-  summary() |>
-  kable()
-```
-In @tbl-neighbhourhoodtable, West Humber-Clairville has the greatest number of collisions with 2812 MVC from 2017 to 2023. West Humber-Clairville is located in ward 1, which from @fig-numcollisionmap is the region with the darkests shade of blue and is the most dense in terms of number of collisions [@citefinder]. Following this is Wexford/Maryvale, which is located in ward 21 with 2075 collisions. From @tbl-wardprofile, something interesting to note is that ward 1's average household income is \$38,135 with a population of 115120 people and ward 21's average household income is \$40,565 with a population of 115120 people.
+@tbl-wardprofilestats reveals that the mean (also known as the average) population size per ward in Toronto is 110452 people with a standard deviation of 10594 people and the mean for the average household income per ward is \$46,436 with a standard deviation of \$11,647.51. It also indicates that the median for the population size per ward is 110095 people and the median for average household income per ward is $45,345. From @tbl-wardprofile, ward 1's average household income is \$38,135 with a population of 115120 people and ward 21's average household income is \$40,565 with a population of 115120 people. For ward 14, 7, 20, and 2, the average households incomes are \$46,235, \$37,675, \$41,905, and \$45,345, respectively and the population sizes are 104555, 111200, 110095, and 117200 people, respectively. 
 
+When comparing the density of collisions in Toronto for each year with @fig-numcollisionmap, the density stays the same from 2017 to 2023 with ward 1 having the largest amount of collisions. According to @tbl-wardprofilestats and @sec-location, when comparing the the average household incomes for the wards each neighbourhood that make up 2% of motor vehicle collisions with the mean and median for average income per ward, the incomes are below the mean and median. The wards of the other 2 neighbourhoods from @tbl-wardprofilestats have incomes that are below the mean and either equal to or below the median. However for population sizes, the wards of West Humber-Clairville, York University Heights, Wexford/Maryvale, and Etobicoke City Centre are above the mean population size per ward while the rest in @tbl-wardprofilestats are below it.
 
-### Type of Collisions in Toronto (2017 - 2023) {#sec-types}
+### Types of motor vehicle collisions in Toronto (2017 - 2023) {#sec-types}
 ```{r}
 #| label: tbl-collisiontype
-#| tbl-cap: Number of Motor Vehicle Collisions of Different Types Across Toronto from 2017 to 2023
+#| tbl-cap: Motor vehicle collisions of different types in Toronto from 2017 to 2023
 #| echo: false # Code will run and its output will show but the code itself will not be included in the doc
 #| warning: false # Warnings are not included 
 #| message: false # Messages are not included 
 
 cleaned_collisions_data_table <-
-cleaned_collisions_data |>
+  cleaned_collisions_data |>
+  # Group data by year
   group_by(year) |>
+  # Obtain unique rows 
   unique() |>
+  # Add in new column for proportions
   mutate(
     proportion =  round(num_of_collisions / sum(num_of_collisions), 2)
   ) |>
+  # Ungroup the data 
   ungroup() |>
-  rename (
+  # Rename columns 
+  rename(
     "Year" = year,
-    "Collision Type" = collision_type,
+    "Motor Vehicle Collision Type" = collision_type,
     "Number of Collisions" = num_of_collisions,
-    "Proportion of Collisions (Per Year)" = proportion
+    "Proportion of Motor Vehicle Collisions (Per Year)" = proportion
   ) |>
-  select("Year", "Collision Type", "Number of Collisions", "Proportion of Collisions (Per Year)")
+  # Choosing columns to display for table
+  select("Year", "Motor Vehicle Collision Type", "Number of Collisions", "Proportion of Motor Vehicle Collisions (Per Year)")
+
 cleaned_collisions_data_table |>
+  # Creating table 
   kable()
 ```
 
 ```{r}
 #| label: tbl-collisionstats
-#| tbl-cap: Summary Statistics of the Number of Motor Vehicle Collisions of Different Types Across Toronto from 2017 to 2023
+#| tbl-cap: Minimum, quartiles, median, and maximum of motor vehicle collisions of different types in Toronto from 2017 to 2023
 #| echo: false # Code will run and its output will show but the code itself will not be included in the doc
 #| warning: false # Warnings are not included 
 #| message: false # Messages are not included 
+
+# Creates table
 cleaned_collisions_data_table |>
   select("Number of Collisions") |>
   summary() |>
@@ -195,12 +222,14 @@ cleaned_collisions_data_table |>
 
 ```{r}
 #| label: fig-collisionhistogram
-#| fig-cap: This histogram reveals the number of motor vehicle collisions from 2017 to 2023 across Toronto and the different types of motor vehicle collisions. 
+#| fig-cap:  Number of motor vehicle collisions in Toronto grouped by types from 2017 to 2023
 #| echo: false
 #| warning: false
 #| message: false
-# Referenced chapter Chapter 5 of Telling Stories with Data by Rohan Alexander for 
-# scale_fill_viridis_d(), theme(), mapping = aes(...)
+
+# Referenced tutorial notes from summer STA238 2023 to obtain the code portion of geom_bar(stat="identity")
+# Code referenced: Alexander (2023) 
+# Creating histogram breaking down the types of motor vehicle collisions.
 cleaned_collisions_data |>
   ggplot(mapping = aes(x = year, y = num_of_collisions, fill = collision_type)) +
   geom_bar(stat="identity") +
@@ -211,35 +240,37 @@ cleaned_collisions_data |>
 ```
 From @fig-collisionhistogram, when comparing the overall number of collisions before 2020 and 2020 onwards, there is a overall annual decrease with the overall number of collisions. However, collisions involving property damage remains the majority of collision cases over the years. We can see this decrease from 2019 and 2020 from about 79205 collisions to 43297 collisions. According to @tbl-collisionstats and @tbl-collisiontype, the peak number of property damage collisions was at 60865 in 2019, which made up 77% of the collisions in that year. However property damage collisions in 2020 was up to 79% of collisions in 2020. 
 
-### Pedestrians Involved in a Motor Vehicle Collision (2017-2023) {#sec-pedes}
+### Pedestrians involved in a motor vehicle collision (2017-2023) {#sec-pedes}
 
 ```{r}
 #| label: tbl-pedestrianhistogram
-#| tbl-cap: Number of Pedestrians Involved in a Motor Vehicle Collision from 2017 to 2023
+#| tbl-cap: Number of pedestrians involved in motor vehicle collisions in Toronto from 2017 to 2023
 #| echo: false # Code will run and its output will show but the code itself will not be included in the doc
 #| warning: false # Warnings are not included 
 #| message: false # Messages are not included 
 
-# Add up num of pedestrians for each year, get number of collisions each year, and the proportion
+# Setting up table 
 cleaned_collisions_data_yearly <-
   cleaned_collisions_data |>
+  # Groups data by year
   group_by(year) |>
+  # Obtains unique rows
   unique() |>
+  # Creates new columns for number of pedestrians involved in collisions for each year, gets the number of collisions for each year, and calculates the proportion of pedestrians involved in collisions each year 
   mutate (
-    yearly_num_pedestrians = sum(num_of_pedestrians)
-  ) |>
-  mutate(
-    num_of_collisons_year = sum(num_of_collisions)
-  ) |>
-  mutate(
+    yearly_num_pedestrians = sum(num_of_pedestrians),
+    num_of_collisons_year = sum(num_of_collisions),
     proportion = round(yearly_num_pedestrians / num_of_collisons_year, 3)
   ) |>
   ungroup()
   
-  
+# Creates table for pedestrians involved in collisions each year 
 cleaned_collisions_data_yearly |>
+  # Choose the column to display for the graph
   select(year, yearly_num_pedestrians, proportion) |>
+  # Filter out non-unique rows 
   unique() |>
+  # Rename variables to be clearer for table 
   rename(
     "Year" = year,
     "Number of pedestrians involved (Per Year)" = yearly_num_pedestrians, 
@@ -248,17 +279,16 @@ cleaned_collisions_data_yearly |>
   kable()
 ```
 
+
 ```{r}
 #| label: fig-pedestrianhistogram
-#| fig-cap: This histogram reveals the number of pedestrians involved in a motor vehicle collisions from 2017 to 2023 across Toronto. 
+#| fig-cap: Number of pedestrians involved in motor vehicle collisions from 2017 to 2023 in Toronto. 
 #| echo: false
 #| warning: false
 #| message: false
 
-# Referenced tutorial notes from summer STA238 2023 to obtain the code portion of geom_bar(stat="identity") and plot.title
-# Referenced chapter Chapter 5 of Telling Stories with Data by Rohan Alexander for 
-# scale_fill_viridis_d(), theme(), mapping = aes(...)
-
+# Code referenced: Alexander (2023) 
+# Creates histogram for the number of pedestrians involved in motor vehicle collisions.
 cleaned_collisions_data_yearly |>
   ggplot(mapping = aes(x = year, y = yearly_num_pedestrians)) +
   geom_col(fill="lightblue",colour="lightblue") +
@@ -278,7 +308,8 @@ cleaned_collisions_data_yearly |>
 
 ## First discussion point {#sec-first-point}
 
-According to @tbl-wardprofilestats and @sec-location, ward 1 and ward 21's population number are above the mean of 110452 people (also known as average) however both wards are below the mean of $46,436 in terms of average household income. 
+
+Vision Zero has also faced criticism due to its lack of focus on addressing road and pedestrian safety in low-income areas [@visionzeroinequality]. While we did not directly looked at income compared to wards, which could be further investigated in the future, we found that the number of crashes across Toronto stayed pretty consistent from 2017 to 2023 based on @fig-numcollisionmap and the neighbourhoods we found impacted with high amounts of vehicle collisions in @tbl-neighbhourhoodtable were in wards that are below the mean average household income based on data from 2020. 
 
 
 ## Second discussion point
@@ -298,7 +329,7 @@ According to @tbl-wardprofilestats and @sec-location, ward 1 and ward 21's popul
 # Appendix {-}
 ```{r}
 #| label: tbl-wardprofile
-#| tbl-cap: Toronto Ward Profile in 2020
+#| tbl-cap: Population size and average household income across Toronto wards in 2020
 #| echo: false # Code will run and its output will show but the code itself will not be included in the doc
 #| warning: false # Warnings are not included 
 #| message: false # Messages are not included 
@@ -308,12 +339,21 @@ cleaned_ward_data |>
     "Ward Number" = ward_num,
     "Ward Name" = ward_name,
     "Population Number" = pop_num, 
-    "Average Household Income"= avg_income
+    "Average Household Income (CAD)"= avg_income
   ) |>
   kable()
 ```
 
 
+```{r}
+#| label: tbl-neighbhourhoodtablefull
+#| tbl-cap: Toronto Neighbourhoods with the most number of motor vehicle collisions from 2017 to 2023
+#| echo: false # Code will run and its output will show but the code itself will not be included in the doc
+#| warning: false # Warnings are not included 
+#| message: false # Messages are not included 
+collisions_num_per_neighbhourhood |>
+  kable() 
+```
 \newpage
 
 
