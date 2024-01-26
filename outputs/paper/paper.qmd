@@ -80,7 +80,7 @@ Some of the datasets used for the data analysis combined the `Ward Profiles (25-
 `num_of_pedestrians` represents the number of pedestrians that were hit in the vehicle collision.`yearly_collision_num` and `total_collisions_2017_2023` are the count of collisions in a specific year and the total number of collisions from 2017 to 2023 for each Toronto neighbhourhood mentioned in the `Police Annual Statistical Report - Traffic Collisions` dataset. For the dataset regarding Toronto ward profiles, the following variables were created: `ward_name` (indicates the name of the Toronto ward), `pop_num` (represents the population size of Toronto wards as of 2020), and `avg_income` (signifies the average household income of each ward as of 2020). 
 
 # Results {#sec-result}
-### Motor vehicle collisions across Toronto neighbourhoods and wards (2017-2023) {#sec-location}
+## Motor vehicle collisions across Toronto neighbourhoods and wards (2017-2023) {#sec-location}
 As of 2024, There are 25 wards and 158 neighbourhoods in the city of Toronto. The distribution of motor vehicle collisions across different neighbourhoods and wards was investigated and the following was obtained:
 ```{r}
 #| label: tbl-neighbhourhoodtable
@@ -171,7 +171,7 @@ In @tbl-neighbhourhoodtable, West Humber-Clairville has the largest amount of co
 
 When comparing the density of collisions in Toronto for each year with @fig-numcollisionmap, the density stays the same from 2017 to 2023 with ward 1 having the largest amount of collisions. According to @tbl-wardprofilestats and @sec-location, when comparing the the average household incomes for the wards each neighbourhood that make up 2% of motor vehicle collisions with the mean and median for average income per ward, the incomes are below the mean and median. The wards of the other 2 neighbourhoods from @tbl-wardprofilestats have incomes that are below the mean and either equal to or below the median. However for population sizes, the wards of West Humber-Clairville, York University Heights, Wexford/Maryvale, and Etobicoke City Centre are above the mean population size per ward while the rest in @tbl-wardprofilestats are below it.
 
-### Types of motor vehicle collisions in Toronto (2017 - 2023) {#sec-types}
+## Types of motor vehicle collisions in Toronto (2017 - 2023) {#sec-types}
 ```{r}
 #| label: tbl-collisiontype
 #| tbl-cap: Motor vehicle collisions of different types in Toronto from 2017 to 2023
@@ -238,9 +238,9 @@ cleaned_collisions_data |>
   theme(legend.position = "bottom", plot.title = element_text(size = 9, face = "bold"), rect = element_blank(), legend.title = element_text(size = 9), legend.text = element_text(size = 7)) +
   scale_fill_viridis_d()
 ```
-From @fig-collisionhistogram, when comparing the overall number of collisions before 2020 and 2020 onwards, there is a overall annual decrease with the overall number of collisions. However, collisions involving property damage remains the majority of collision cases over the years. We can see this decrease from 2019 and 2020 from about 79205 collisions to 43297 collisions. According to @tbl-collisionstats and @tbl-collisiontype, the peak number of property damage collisions was at 60865 in 2019, which made up 77% of the collisions in that year. However property damage collisions in 2020 was up to 79% of collisions in 2020. 
+From @fig-collisionhistogram, when comparing the overall number of motor vehicle collisions before 2020 and 2020 onwards, there is a overall annual decrease with the number of collisions. However, collisions involving property damage remains the majority of collision cases over the years. We can see this decrease from 2019 and 2020 from about 79205 collisions to 43297 collisions. According to @tbl-collisionstats and @tbl-collisiontype, the peak number of property damage collisions from 2017 to 2023 was at 60865 in 2019, which made up 77% of the collisions in that year. However property damage collisions in 2020 was up to 79% of collisions in 2020. We can also see that the lowest number of collisions occurred in 2021 and had stayed below 60865 since 2020. @fig-collisionhistogram and @tbl-collisiontype also reveals that 2020 to 2022, the second most common collision type was Personal injury (making up 10% to 12% of collisions in their respective years). In other years, the second most common motor vehicle collisions are Fail to Remain collisions.
 
-### Pedestrians involved in a motor vehicle collision (2017-2023) {#sec-pedes}
+## Pedestrians involved in a motor vehicle collision (2017-2023) {#sec-pedes}
 
 ```{r}
 #| label: tbl-pedestrianhistogram
@@ -279,7 +279,6 @@ cleaned_collisions_data_yearly |>
   kable()
 ```
 
-
 ```{r}
 #| label: fig-pedestrianhistogram
 #| fig-cap: Number of pedestrians involved in motor vehicle collisions from 2017 to 2023 in Toronto. 
@@ -296,9 +295,7 @@ cleaned_collisions_data_yearly |>
   labs(x = "Year", y = "Number of Collisions Involved") +
   theme(plot.title = element_text(size = 9, face = "bold"), rect = element_blank(), legend.title = element_text(size = 9), legend.text = element_text(size = 7)) 
 ```
-
-
-
+From @fig-pedestrianhistogram, we can see that there has been a decline in pedestrian involvement in motor vehicle collisions from 2017 to 2023. Pedestrian involvement was at its highest point in 2017 with 1748 pedestrians where approximately 24% of the total number of collisions in 2017 involved pedestrians. In 2018, 1601 pedestrians were involved in motor vehicle collisions (approximately 21%). With 2019, 2020, and 2021, it was 1545 (approximately 20%), 1055 (approximately 24%), and 990 (approximately 24%), respectively. In 2022, the number of pedestrians increased to 1241 (approximately 22%) but fell to its lowest number of pedestrian in collisions in year with 968 people in 2023 (approximately 20%).
 
 \newpage
 
@@ -309,7 +306,7 @@ cleaned_collisions_data_yearly |>
 ## First discussion point {#sec-first-point}
 
 
-Vision Zero has also faced criticism due to its lack of focus on addressing road and pedestrian safety in low-income areas [@visionzeroinequality]. While we did not directly looked at income compared to wards, which could be further investigated in the future, we found that the number of crashes across Toronto stayed pretty consistent from 2017 to 2023 based on @fig-numcollisionmap and the neighbourhoods we found impacted with high amounts of vehicle collisions in @tbl-neighbhourhoodtable were in wards that are below the mean average household income based on data from 2020. 
+Vision Zero has also faced criticism due to its lack of focus on addressing road and pedestrian safety in low-income areas [@visionzeroinequality]. While we did not directly looked at income compared to wards, which could be further investigated in the future, we found that the number of crashes across Toronto stayed consistent from 2017 to 2023 based on @fig-numcollisionmap and the neighbourhoods we found impacted with high amounts of vehicle collisions in @tbl-neighbhourhoodtable were in wards that are below the mean average household income based on data from 2020. 
 
 
 ## Second discussion point

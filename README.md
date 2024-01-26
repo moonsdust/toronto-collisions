@@ -1,7 +1,7 @@
 # Motor Vehicle Collisions Decreased in Toronto During and After the Beginning of the COVID-19 Pandemic
 
 ## Overview
-As one of the fastest growing cities and densest cities in Canada, road and pedestrian safety are growing concerns in Toronto, especially after the COVID-19 Pandemic. This paper looks at trends of collisions from 2017 to 2023 in Toronto neighbourhoods and wards, types of collisions, and the number of pedestrians involved. The results shows that motor vehicle collisions and pedestrian involvement in them have decreased after the pandemic but are still prevalent in more lower-income areas. Further investigation is needed on the demographics of Toronto areas with high number of motor vehicle collisions.
+As one of the fastest-growing and densest Canadian cities, road and pedestrian safety are growing concerns in Toronto, especially after the COVID-19 pandemic. This paper looks at trends of collisions from 2017 to 2023 in Toronto neighbourhoods and wards, types of collisions, and the number of pedestrians involved. The results show that motor vehicle collisions and pedestrian involvement in them have decreased after the pandemic but are still prevalent in lower-income areas. Further investigation is needed on the demographics of Toronto areas with a high number of motor vehicle collisions.
 
 This repository is associated with the paper, "Motor Vehicle Collisions Decreased in Toronto During and After the Beginning of the COVID-19 Pandemic". 
 
