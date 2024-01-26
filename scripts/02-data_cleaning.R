@@ -139,6 +139,8 @@ ward_pop_size_row <-
 # Convert row to a column 
 ward_pop_size <- 
   ward_pop_size_row |>
+  # Code snippet to convert to a 1-column matrix and then to a vector 
+  # was adapted from the following: https://www.geeksforgeeks.org/convert-matrix-to-vector-in-r/
   t() |> # Convert 1-row matrix into a 1-column matrix 
   c() |> # Convert to a vector
   tibble() |> # Change into a tibble
